@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rástlo to rýchlejšie ako zlato?</title>
+  <style>
+    :root {
+      --blue: #0b2a7a;
+      --blue-2: #123eb3;
+      --blue-light: #eaf1ff;
+      --line: #2447d8;
+      --orange: #f45b14;
+      --orange-soft: #fff1e8;
+      --green: #0f7b57;
+      --green-soft: #e9f8f2;
+      --text: #071747;
+      --muted: #4b5a80;
+      --bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    .page {
+      width: min(1480px, 96vw);
+      margin: 0 auto;
+      padding: 34px 26px 44px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--blue);
+      font-size: clamp(42px, 5.8vw, 78px);
+      line-height: 0.96;
+      font-weight: 880;
+      letter-spacing: -0.045em;
+    }
+
+    .subtitle {
+      max-width: 1160px;
+      margin: 16px auto 0;
+      color: var(--blue);
+      font-size: clamp(18px, 2vw, 25px);
+      line-height: 1.35;
+      font-weight: 520;
+    }
+
+    .subtitle strong { font-weight: 850; }
+
+    .method-card {
+      margin: 22px auto 28px;
+      border: 2.5px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #f9fbff 0%, #eef4ff 100%);
+      padding: 18px 24px;
+      display: grid;
+      grid-template-columns: 1.1fr 1.4fr;
+      gap: 24px;
+      align-items: center;
+      box-shadow: 0 8px 28px rgba(18, 62, 179, 0.06);
+    }
+
+    .method-card h2 {
+      margin: 0 0 8px;
+      color: var(--blue);
+      font-size: clamp(24px, 2.2vw, 34px);
+      line-height: 1.08;
+    }
+
+    .method-card p {
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(16px, 1.35vw, 19px);
+      line-height: 1.38;
+      font-weight: 540;
+    }
+
+    .formula {
+      border: 2px solid rgba(36, 71, 216, 0.38);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px 16px;
+      color: var(--blue);
+      font-size: clamp(15px, 1.25vw, 18px);
+      line-height: 1.35;
+      font-weight: 760;
+    }
+
+    .formula code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: normal;
+    }
+
+    .section-title {
+      margin: 28px 0 12px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      color: var(--blue);
+      font-size: clamp(25px, 2.6vw, 38px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .section-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(14px, 1.2vw, 17px);
+      line-height: 1.35;
+      max-width: 660px;
+      text-align: right;
+      font-weight: 560;
+    }
+
+    .table-wrap, .property-section {
+      border: 2.5px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 8px 28px rgba(18, 62, 179, 0.06);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th, td {
+      border-right: 2px solid var(--line);
+      border-bottom: 2px solid var(--line);
+      padding: 18px 22px;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    th:last-child, td:last-child { border-right: 0; }
+    tr:last-child td { border-bottom: 0; }
+
+    th {
+      background: linear-gradient(180deg, #f9fbff 0%, #eef4ff 100%);
+      color: var(--blue);
+      font-size: clamp(16px, 1.48vw, 22px);
+      line-height: 1.18;
+      font-weight: 860;
+    }
+
+    th small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.72em;
+      font-weight: 730;
+    }
+
+    td {
+      font-size: clamp(16px, 1.4vw, 22px);
+      line-height: 1.25;
+      font-weight: 560;
+    }
+
+    .indicator, .property-row-label {
+      color: var(--blue);
+      font-weight: 860;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 13px;
+      line-height: 1;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .tag-abstract { color: var(--orange); background: var(--orange-soft); }
+    .tag-direct { color: var(--green); background: var(--green-soft); }
+
+    .value, .property-main {
+      display: block;
+      color: var(--blue);
+      font-size: clamp(18px, 1.65vw, 25px);
+      white-space: nowrap;
+      line-height: 1.15;
+      font-weight: 850;
+    }
+
+    .sub, .property-sub, .property-note {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: clamp(13px, 1.05vw, 16px);
+      line-height: 1.28;
+      font-weight: 560;
+    }
+
+    .money-change, .property-result.money {
+      color: var(--blue);
+      font-size: clamp(21px, 2vw, 30px);
+      font-weight: 920;
+    }
+
+    .gold-change, .property-result.gold {
+      color: var(--orange);
+      font-size: clamp(21px, 2vw, 30px);
+      font-weight: 920;
+    }
+
+    .positive { color: var(--green) !important; }
+
+    .conclusion {
+      text-align: left;
+      color: var(--text);
+      font-weight: 570;
+    }
+
+    .conclusion strong { color: var(--blue); }
+
+    .property-section { margin-top: 26px; }
+
+    .property-title {
+      padding: 18px 24px;
+      background: linear-gradient(180deg, #f9fbff 0%, #eef4ff 100%);
+      border-bottom: 2px solid var(--line);
+      color: var(--blue);
+    }
+
+    .property-title h2 {
+      margin: 0;
+      font-size: clamp(24px, 2.4vw, 34px);
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+    }
+
+    .property-title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: clamp(15px, 1.25vw, 18px);
+      line-height: 1.35;
+      font-weight: 560;
+    }
+
+    .property-title strong { color: var(--blue); font-weight: 850; }
+
+    .notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 22px;
+    }
+
+    .card {
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      padding: 22px 26px;
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 22px;
+      align-items: center;
+      min-height: 170px;
+      background: #fff;
+    }
+
+    .icon {
+      width: 76px;
+      height: 76px;
+      border: 4px solid var(--blue);
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-size: 42px;
+      font-weight: 900;
+    }
+
+    .divider {
+      border-left: 2px solid rgba(36, 71, 216, 0.35);
+      padding-left: 22px;
+    }
+
+    .card h2 {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: clamp(22px, 2vw, 30px);
+      line-height: 1.1;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: clamp(16px, 1.38vw, 20px);
+      line-height: 1.35;
+      color: var(--text);
+      font-weight: 520;
+    }
+
+    .footnote {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(36, 71, 216, 0.35);
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.42;
+    }
+
+    .warning {
+      color: var(--orange);
+      font-weight: 850;
+    }
+
+    @media (max-width: 980px) {
+      .page { padding: 24px 14px; }
+      .method-card { grid-template-columns: 1fr; }
+      .section-title { display: block; }
+      .section-title p { margin-top: 8px; text-align: left; }
+      .table-wrap, .property-section { overflow-x: auto; }
+      table { min-width: 1120px; }
+      .notes { grid-template-columns: 1fr; }
+      .card { grid-template-columns: 72px 1fr; padding: 18px; }
+      .icon { width: 60px; height: 60px; font-size: 34px; border-radius: 14px; }
+    }
+
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page { width: 100%; padding: 14mm; }
+      .table-wrap, .property-section, .card, .method-card { break-inside: avoid; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>Rástlo to rýchlejšie ako zlato?</h1>
+      <p class="subtitle">
+        Porovnanie rokov <strong>1998 → 2024</strong> ukazuje dve rôzne veci: bežný ekonomický rast v peniazoch
+        a samostatne výsledok, keď rovnaký rast porovnáme s cenou zlata. Nie je to dôkaz, že ekonomika nerástla —
+        je to test, či daný ukazovateľ rástol rýchlejšie alebo pomalšie než zlato.
+      </p>
+    </header>
+
+    <section class="method-card" aria-label="Metodika porovnania so zlatom">
+      <div>
+        <h2>Najdôležitejšie pravidlo</h2>
+        <p>
+          Modré čísla čítaj ako normálny vývoj v peniazoch alebo v štandardnom ukazovateli.
+          Oranžové čísla čítaj iba ako <strong>relatívny benchmark voči zlatu</strong>, nie ako priamu životnú úroveň.
+        </p>
+      </div>
+      <div class="formula">
+        <code>Výsledok voči zlatu = (rast ukazovateľa ÷ rast ceny zlata) − 1</code><br />
+        Príklad: ak ukazovateľ stúpne 2×, ale zlato 8×, výsledok voči zlatu je približne −75 %.
+      </div>
+    </section>
+
+    <div class="section-title">
+      <h2>Abstraktné porovnania: ekonomické ukazovatele vs zlato</h2>
+      <p>
+        Tieto riadky nehovoria, koľko si reálne kúpi bežný človek. Hovoria len, či daný ukazovateľ porazil cenu zlata.
+      </p>
+    </div>
+
+    <section class="table-wrap" aria-label="Porovnanie ekonomických ukazovateľov voči zlatu">
+      <table>
+        <colgroup>
+          <col style="width: 19%">
+          <col style="width: 13%">
+          <col style="width: 13%">
+          <col style="width: 18%">
+          <col style="width: 19%">
+          <col style="width: 18%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Ukazovateľ</th>
+            <th>1998</th>
+            <th>2024</th>
+            <th>Bežné meranie</th>
+            <th>Relatívne voči zlatu</th>
+            <th>Čo to znamená</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="indicator">
+              STOXX Europe 600<br>Total Return
+              <span class="tag tag-abstract">benchmark</span>
+            </td>
+            <td><span class="value">€10&nbsp;000</span><span class="sub">modelová investícia</span></td>
+            <td><span class="value">€35&nbsp;000</span><span class="sub">hodnota portfólia</span></td>
+            <td class="money-change">+250&nbsp;%</td>
+            <td class="gold-change">≈ −63&nbsp;%</td>
+            <td class="conclusion">Akcie v eurách rástli. <strong>Voči zlatu však zaostali</strong>, pretože cena zlata rástla rýchlejšie.</td>
+          </tr>
+          <tr>
+            <td class="indicator">
+              Nominálne HDP na obyvateľa v EÚ<br><small>bežné EUR</small>
+              <span class="tag tag-abstract">benchmark</span>
+            </td>
+            <td><span class="value">€16,7 tis.</span></td>
+            <td><span class="value">€39,7 tis.</span></td>
+            <td class="money-change">+138&nbsp;%</td>
+            <td class="gold-change">≈ −72&nbsp;%</td>
+            <td class="conclusion">Nominálne HDP na obyvateľa rástlo. Tento riadok ale <strong>nie je inflačne očistená životná úroveň</strong>.</td>
+          </tr>
+          <tr>
+            <td class="indicator">
+              Priemerná hrubá mzda na Slovensku
+              <span class="tag tag-abstract">benchmark</span>
+            </td>
+            <td><span class="value">€332 / mes.</span><span class="sub">priemer, nie medián</span></td>
+            <td><span class="value">€1&nbsp;524 / mes.</span><span class="sub">priemer, nie medián</span></td>
+            <td class="money-change">+359&nbsp;%</td>
+            <td class="gold-change">≈ −45 až −50&nbsp;%</td>
+            <td class="conclusion">Mzdy rástli veľmi výrazne. Záporný výsledok len znamená, že <strong>zlato rástlo ešte rýchlejšie</strong>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="section-title">
+      <h2>Priame príklady: čo si za to kúpiš</h2>
+      <p>
+        Tieto časti sú najľahšie na čítanie: rovnaká hotovosť alebo rovnaké množstvo zlata sa prepočíta na m² bývania alebo spotrebný kôš.
+      </p>
+    </div>
+
+    <section class="property-section" aria-label="Bratislavský kraj bývanie merané zlatom">
+      <div class="property-title">
+        <h2>Samostatne: bývanie v Bratislavskom kraji</h2>
+        <p>
+          Použité sú <strong>priemerné ceny nehnuteľností na bývanie v Bratislavskom kraji podľa NBS</strong>,
+          nie konkrétna cena bytu v meste Bratislava. Tu je porovnanie intuitívne: koľko <strong>m²</strong>
+          kúpiš za rovnaké eurá alebo za rovnaké množstvo zlata.
+        </p>
+      </div>
+
+      <table class="property-table" aria-label="Porovnanie bývania v Bratislavskom kraji v eurách a cez zlato">
+        <colgroup>
+          <col style="width: 18%">
+          <col style="width: 24%">
+          <col style="width: 19%">
+          <col style="width: 19%">
+          <col style="width: 20%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Typ porovnania</th>
+            <th>Štartovací kapitál</th>
+            <th>2002<br><small>koľko m² kúpiš</small></th>
+            <th>2024<br><small>koľko m² kúpiš</small></th>
+            <th>Výsledok</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="property-row-label">Rovnaké eurá<br><span class="tag tag-direct">priama kúpna sila</span></td>
+            <td><div class="property-main">€10&nbsp;000</div><div class="property-sub">hotovosť, bez investovania</div></td>
+            <td><div class="property-main">12,8 m²</div><div class="property-sub">pri priemernej cene BA kraja 779 €/m²</div></td>
+            <td><div class="property-main">3,1 m²</div><div class="property-sub">pri priemernej cene BA kraja 3&nbsp;190 €/m²</div></td>
+            <td><div class="property-result gold">−76&nbsp;%</div><div class="property-note">rovnaké eurá kúpia menej m²</div></td>
+          </tr>
+          <tr>
+            <td class="property-row-label">Rovnaké zlato<br><span class="tag tag-direct">priama kúpna sila</span></td>
+            <td><div class="property-main">30,5 oz zlata</div><div class="property-sub">hodnota približne €10&nbsp;000 v roku 2002</div></td>
+            <td><div class="property-main">12,8 m²</div><div class="property-sub">čo by 30,5 oz kúpilo v roku 2002</div></td>
+            <td><div class="property-main">21,1 m²</div><div class="property-sub">čo by 30,5 oz kúpilo v roku 2024</div></td>
+            <td><div class="property-result positive">+64&nbsp;%</div><div class="property-note">rovnaké zlato kúpi viac m² než v roku 2002</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="property-section" aria-label="Spotrebný kôš a HICP eurozóny merané v eurách a cez zlato">
+      <div class="property-title">
+        <h2>Samostatne: spotrebný kôš / HICP eurozóny</h2>
+        <p>
+          Toto je modelový prepočet cez <strong>index spotrebiteľských cien</strong>. Pre jednoduché čítanie je
+          <strong>€1&nbsp;000 v roku 1998 nastavených na 10 modelových košov</strong>. Nejde o presný nákupný zoznam,
+          ale o indexový spôsob, ako ukázať zmenu kúpnej sily hotovosti.
+        </p>
+      </div>
+
+      <table class="property-table" aria-label="Porovnanie HICP eurozóny v eurách a cez zlato">
+        <colgroup>
+          <col style="width: 18%">
+          <col style="width: 24%">
+          <col style="width: 19%">
+          <col style="width: 19%">
+          <col style="width: 20%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Typ porovnania</th>
+            <th>Štartovací kapitál</th>
+            <th>1998<br><small>koľko košov kúpiš</small></th>
+            <th>2024<br><small>koľko košov kúpiš</small></th>
+            <th>Výsledok</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="property-row-label">Rovnaké eurá<br><span class="tag tag-direct">priama kúpna sila</span></td>
+            <td><div class="property-main">€1&nbsp;000</div><div class="property-sub">rovnaká hotovosť</div></td>
+            <td><div class="property-main">10 košov</div><div class="property-sub">východiskový bod v roku 1998</div></td>
+            <td><div class="property-main">5,8 koša</div><div class="property-sub">modelovo po raste HICP</div></td>
+            <td><div class="property-result gold">−42&nbsp;%</div><div class="property-note">rovnaké eurá kúpia menej spotrebného koša</div></td>
+          </tr>
+          <tr>
+            <td class="property-row-label">Rovnaké zlato<br><span class="tag tag-direct">priama kúpna sila</span></td>
+            <td><div class="property-main">4,08 oz zlata</div><div class="property-sub">hodnota približne €1&nbsp;000 v roku 1998</div></td>
+            <td><div class="property-main">10 košov</div><div class="property-sub">rovnaký štart ako v eurách</div></td>
+            <td><div class="property-main">47,7 koša</div><div class="property-sub">modelová hodnota 4,08 oz v roku 2024</div></td>
+            <td><div class="property-result positive">+377&nbsp;%</div><div class="property-note">zlato rástlo rýchlejšie než spotrebiteľské ceny</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="property-section" aria-label="PPP HDP na obyvateľa na Slovensku porovnané so zlatom">
+      <div class="property-title">
+        <h2>Samostatne: Slovensko — reálne HDP/obyv. podľa PPP vs zlato</h2>
+        <p>
+          Tento riadok je <strong>abstraktný benchmark</strong>, nie priama peňaženka občana. PPP v konštantných
+          2021 medzinárodných dolároch už upravuje ekonomiku podľa reálnej kúpnej sily. Porovnanie so zlatom preto
+          znamená iba: či reálny PPP rast Slovenska porazil cenu zlata.
+        </p>
+      </div>
+
+      <table class="property-table" aria-label="PPP HDP na obyvateľa na Slovensku porovnané so zlatom">
+        <colgroup>
+          <col style="width: 22%">
+          <col style="width: 20%">
+          <col style="width: 20%">
+          <col style="width: 19%">
+          <col style="width: 19%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Ukazovateľ</th>
+            <th>1998</th>
+            <th>2024</th>
+            <th>Štandardné čítanie PPP</th>
+            <th>Benchmark voči zlatu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="property-row-label">HDP/obyv. podľa PPP<br><span class="tag tag-abstract">benchmark</span></td>
+            <td><div class="property-main">18,3 tis. I$</div><div class="property-sub">konštantné 2021 medzinárodné doláre</div></td>
+            <td><div class="property-main">40,3 tis. I$</div><div class="property-sub">konštantné 2021 medzinárodné doláre</div></td>
+            <td><div class="property-result positive">+120&nbsp;%</div><div class="property-note">reálna produkcia / materiálna úroveň na obyvateľa výrazne narástla</div></td>
+            <td><div class="property-result gold">≈ −73&nbsp;%</div><div class="property-note">neznamená pokles životnej úrovne; znamená, že zlato rástlo rýchlejšie</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="notes">
+      <article class="card">
+        <div class="icon" aria-hidden="true">↗</div>
+        <div class="divider">
+          <h2>Ako to čítať</h2>
+          <p>
+            Pri bývaní a HICP ide o priamu kúpnu silu: koľko m² alebo košov kúpiš.
+            Pri GDP, mzdách, akciách a PPP ide iba o benchmark: či ukazovateľ porazil cenu zlata.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="icon" aria-hidden="true">!</div>
+        <div class="divider">
+          <h2>Dôležité</h2>
+          <p>
+            Záporné číslo voči zlatu neznamená automaticky úpadok ekonomiky. Znamená len to,
+            že zlato bolo v danom období silnejší porovnávací benchmark.
+          </p>
+        </div>
+      </article>
+    </section>
+
+    <p class="footnote">
+      <span class="warning">Poznámka:</span>
+      Údaje sú zaokrúhlené a slúžia na vysvetlenie porovnania. Pri STOXX je dôležité používať verziu Total Return / Gross Return v EUR; price index bez dividend by dal iný výsledok.
+      Box Bratislavský kraj používa NBS priemerné ceny nehnuteľností na bývanie podľa krajov, teda regionálny priemer v €/m², nie konkrétnu cenu bytu v meste Bratislava.
+      Box HICP používa index spotrebiteľských cien eurozóny. Box PPP používa World Bank indikátor HDP na obyvateľa podľa PPP v konštantných 2021 medzinárodných dolároch pre Slovensko.
+      Výpočet voči zlatu používa orientačnú ročnú priemernú cenu zlata v EUR za trojskú uncu; ak sa použije denná cena, USD cena alebo iný priemer, percentá sa môžu mierne zmeniť.
+    </p>
+  </main>
+</body>
+</html>
